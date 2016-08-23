@@ -18,3 +18,17 @@ def columns_with_nan(df):
         if col_contain_nan(df[col]):
             contain_nan.append(col)
     return contain_nan
+
+def column_type(col):
+    ty = None
+    for val in col.unique():
+        is_first_case_of_non_nan_value = ty is None and non_nan(val)
+        if is_first_case_of_non_nan_value:
+            ty = type(val)
+        is_different_type = non_nan(val) and type(val) is not ty
+        if is_different_type:
+            return None
+    return ty
+
+def non_nan(x):
+    return not (isinstance(x, float) and math.isnan(x))
