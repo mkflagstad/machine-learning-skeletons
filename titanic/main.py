@@ -32,3 +32,9 @@ def column_type(col):
 
 def non_nan(x):
     return not (isinstance(x, float) and math.isnan(x))
+
+def types_of_columns_with_nan(df):
+    types = []
+    for col in columns_with_nan(df):
+        types.append((col, column_type(df[col])))
+    return types
