@@ -26,6 +26,17 @@ def col_contain_nan(col):
             return True
     return False
 
+def col_contain_non_numeric(col):
+    for val in col.unique():
+        if (isinstance(val, str)):
+            val = unicode(val, 'utf-8')
+        if ((isinstance(val, unicode) and not val.isnumeric()) or
+           (not (isinstance(val, float) or isinstance(val, long) or isinstance(val, int)))):
+               return True
+    return False
+
+
+
 def filter_columns(df, condition):
     accum = []
     columns = df.columns
@@ -36,6 +47,9 @@ def filter_columns(df, condition):
 
 def columns_with_nan(df):
     return filter_columns(df, col_contain_nan)
+
+def columns_with_non_numeric(df):
+    return filter_columns(df, col_contain_non_numeric)
 
 def column_type(col):
     ty = None
