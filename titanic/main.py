@@ -14,7 +14,7 @@ def to_clean(df):
     copy['Embarked'] = copy['Embarked'].fillna(copy['Embarked'].mode()[0])
     return copy
 
-def test_cleaning:():
+def test_cleaning():
     print "og: ", columns_with_nan(titanic_train)
     new = to_clean(titanic_train)
     print "after clean: ", columns_with_nan(new)
@@ -26,13 +26,16 @@ def col_contain_nan(col):
             return True
     return False
 
-def columns_with_nan(df):
-    contain_nan = []
+def filter_columns(df, condition):
+    accum = []
     columns = df.columns
     for col in columns:
-        if col_contain_nan(df[col]):
-            contain_nan.append(col)
-    return contain_nan
+        if condition(df[col]):
+            accum.append(col)
+    return accum
+
+def columns_with_nan(df):
+    return filter_columns(df, col_contain_nan)
 
 def column_type(col):
     ty = None
