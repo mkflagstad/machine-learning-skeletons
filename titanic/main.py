@@ -5,6 +5,21 @@ import math
 #Load the data:
 titanic_train = pandas.read_csv("train.csv")
 
+def to_clean(df):
+    # Find out the columns with missing values before calling `to_clean`
+    # print(columns_with_nan(df))
+    copy = df.copy(deep=True)
+    copy = copy.drop('Cabin', axis=1)
+    copy['Age'] = copy['Age'].fillna(copy['Age'].mean())
+    copy['Embarked'] = copy['Embarked'].fillna(copy['Embarked'].mode()[0])
+    return copy
+
+def test_cleaning:():
+    print "og: ", columns_with_nan(titanic_train)
+    new = to_clean(titanic_train)
+    print "after clean: ", columns_with_nan(new)
+
+
 def col_contain_nan(col):
     for val in col.unique():
         if isinstance(val, float) and math.isnan(val):
