@@ -10,14 +10,25 @@ def to_clean(df):
     # print(columns_with_nan(df))
     copy = df.copy(deep=True)
     copy = copy.drop('Cabin', axis=1)
+    copy = copy.drop('Name', axis=1)
+    copy = copy.drop('Ticket', axis=1)
     copy['Age'] = copy['Age'].fillna(copy['Age'].mean())
     copy['Embarked'] = copy['Embarked'].fillna(copy['Embarked'].mode()[0])
+    copy.loc[copy['Sex'] == 'male', 'Sex'] = 0
+    copy.loc[copy['Sex'] == 'female', 'Sex'] = 1
+    copy.loc[copy['Embarked'] == 'S', 'Embarked'] = 0
+    copy.loc[copy['Embarked'] == 'C', 'Embarked'] = 1
+    copy.loc[copy['Embarked'] == 'Q', 'Embarked'] = 2
     return copy
 
 def test_cleaning():
-    print "og: ", columns_with_nan(titanic_train)
+    print " -- before clean -- "
+    print "columns with nan: ", columns_with_nan(titanic_train)
+    print "columns with non numerics: ", columns_with_non_numeric(titanic_train)
     new = to_clean(titanic_train)
-    print "after clean: ", columns_with_nan(new)
+    print " -- after clean --  "
+    print "columns with nan: ", columns_with_nan(new)
+    print "columns with non numerics: ", columns_with_non_numeric(new)
 
 
 def col_contain_nan(col):
@@ -34,8 +45,6 @@ def col_contain_non_numeric(col):
            (not (isinstance(val, float) or isinstance(val, long) or isinstance(val, int)))):
                return True
     return False
-
-
 
 def filter_columns(df, condition):
     accum = []
@@ -70,3 +79,10 @@ def types_of_columns_with_nan(df):
     for col in columns_with_nan(df):
         types.append((col, column_type(df[col])))
     return types
+
+def num_missing_values(col):
+    nan_count = 0
+    for val in col:
+        if not non_nan(val):
+            nan_count = nan_count + 1
+    return nan_count
