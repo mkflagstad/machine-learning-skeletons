@@ -2,35 +2,6 @@ import pandas
 import sklearn
 import math
 
-#Load the data:
-titanic_train = pandas.read_csv("train.csv")
-
-def to_clean(df):
-    # Find out the columns with missing values before calling `to_clean`
-    # print(columns_with_nan(df))
-    copy = df.copy(deep=True)
-    copy = copy.drop('Cabin', axis=1)
-    copy = copy.drop('Name', axis=1)
-    copy = copy.drop('Ticket', axis=1)
-    copy['Age'] = copy['Age'].fillna(copy['Age'].mean())
-    copy['Embarked'] = copy['Embarked'].fillna(copy['Embarked'].mode()[0])
-    copy.loc[copy['Sex'] == 'male', 'Sex'] = 0
-    copy.loc[copy['Sex'] == 'female', 'Sex'] = 1
-    copy.loc[copy['Embarked'] == 'S', 'Embarked'] = 0
-    copy.loc[copy['Embarked'] == 'C', 'Embarked'] = 1
-    copy.loc[copy['Embarked'] == 'Q', 'Embarked'] = 2
-    return copy
-
-def test_cleaning():
-    print " -- before clean -- "
-    print "columns with nan: ", columns_with_nan(titanic_train)
-    print "columns with non numerics: ", columns_with_non_numeric(titanic_train)
-    new = to_clean(titanic_train)
-    print " -- after clean --  "
-    print "columns with nan: ", columns_with_nan(new)
-    print "columns with non numerics: ", columns_with_non_numeric(new)
-
-
 def col_contain_nan(col):
     for val in col.unique():
         if isinstance(val, float) and math.isnan(val):
