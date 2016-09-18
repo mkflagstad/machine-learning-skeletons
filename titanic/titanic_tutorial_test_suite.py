@@ -26,9 +26,8 @@ class TitanicWorkshop(unittest.TestCase):
         print(titanic_train.iloc[0])
         self.assertTrue(is_df_equal(your_soln, expected))
 
-
-    #See if any family size features might help --
-    #do the number of women in a family make the whole family more likely to survive?
+    def test_random_forest_ensemble(self):
+        titanic_tutorial_answers.random_forest_ensemble(titanic_train)
 
     #Try the random forest classifier in the ensemble.
 
