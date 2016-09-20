@@ -17,7 +17,10 @@ def is_df_equal(df1, df2):
     except:  # appeantly AssertionError doesn't catch all
         return False
 
-
+def assert_array_equal2(array1, array2):
+    if array1.shape != array2.shape:
+        return False
+    return np.allclose(array1, array2)
 
 class TitanicWorkshop(unittest.TestCase):
 
@@ -38,9 +41,7 @@ class TitanicWorkshop(unittest.TestCase):
     def test_random_forest_ensemble(self):
         your_soln = titanic_tutorial.random_forest_ensemble(titanic_train)
         expected = titanic_tutorial_answers.random_forest_ensemble(titanic_train)
-        self.assert_array_equal(your_soln, expected)
-
-    #Try the random forest classifier in the ensemble.
+        self.assertTrue(assert_array_equal2(your_soln, expected))
 
     #A support vector machine might work well with this data.
 

@@ -29,13 +29,12 @@ def add_women_in_family(df):
     return copy
 
 def random_forest_ensemble(df):
+    copy = df.copy(deep=True)
     algorithms = [
     [GradientBoostingClassifier(random_state=1, n_estimators=25, max_depth=3), ["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize", "Title", "FamilyId"]],
     [LogisticRegression(random_state=1), ["Pclass", "Sex", "Fare", "FamilySize", "Title", "Age", "Embarked"]],
     [RandomForestClassifier(random_state=1, n_estimators=50, min_samples_split=4, min_samples_leaf=2),["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize", "Title", "FamilyId"]]]
-    result = ensemble(df, algorithms)
-    print("result size: ", result.shape)
-    return result
+    return ensemble(copy, algorithms)
 
 def ensemble(df, algorithms_with_predictors):
     kf = KFold(df.shape[0], n_folds=3, random_state=1)

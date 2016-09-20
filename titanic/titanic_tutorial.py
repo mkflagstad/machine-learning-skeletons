@@ -31,22 +31,19 @@ def add_women_in_family(df):
     return copy
 
 def random_forest_ensemble(df):
-    # #Add the random forest model to algorithms we want to ensemble
-    # #Use the same predictors as the GradientBoostingClassifier
-    # algorithms = [
-    # [GradientBoostingClassifier(random_state=1, n_estimators=25, max_depth=3), ["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize", "Title", "FamilyId"]],
-    # [LogisticRegression(random_state=1), ["Pclass", "Sex", "Fare", "FamilySize", "Title", "Age", "Embarked"]]]
-    # #The result of the ensemble is a n x m numpy array where n is the number of algorithms we are ensembling
-    # # and m is the number of data points. Each row is the predictions for a given algorithm.
-    # return ensemble(df, algorithms)
+    #Create a copy of the data frame to avoid side effects:
+    copy = df.copy(deep=True)
+
+    #Add the random forest model to algorithms we want to ensemble
+    #   - Use the same predictors as the GradientBoostingClassifier
+    #   - Give the algorithm the following parameters:
+    #   - random_state=1, n_estimators=25, max_depth=3
     algorithms = [
     [GradientBoostingClassifier(random_state=1, n_estimators=25, max_depth=3), ["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize", "Title", "FamilyId"]],
-    [LogisticRegression(random_state=1), ["Pclass", "Sex", "Fare", "FamilySize", "Title", "Age", "Embarked"]],
-    [RandomForestClassifier(random_state=1, n_estimators=50, min_samples_split=4, min_samples_leaf=2),["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize", "Title", "FamilyId"]]]
-    result = ensemble(df, algorithms)
-    print("result size: ", result.shape)
-    return result
-
+    [LogisticRegression(random_state=1), ["Pclass", "Sex", "Fare", "FamilySize", "Title", "Age", "Embarked"]]]
+    #The result of the ensemble is a n x m numpy array where n is the number of algorithms we are ensembling
+    # and m is the number of data points. Each row is the predictions for a given algorithm.
+    return ensemble(copy, algorithms)
 
 def ensemble(df, algorithms_with_predictors):
     kf = KFold(df.shape[0], n_folds=3, random_state=1)
