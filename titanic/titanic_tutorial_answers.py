@@ -73,7 +73,7 @@ def support_vector_machine(df, predictors):
     kf = KFold(df.shape[0], n_folds=3, random_state=1)
     predictions = []
     for train, test in kf:
-        alg = SVC(probability=True)
+        alg = SVC(probability=True, random_state=1)
         train_target = df["Survived"].iloc[train]
         alg.fit(df[predictors].iloc[train,:], train_target)
         test_predictions = alg.predict_proba(df[predictors].iloc[test,:].astype(float))[:,1]

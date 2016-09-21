@@ -3,6 +3,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.cross_validation import KFold
+from sklearn.svm import SVC
 import pandas
 import sklearn
 import main
@@ -50,6 +51,7 @@ def majority_voting(predictions):
     return np.array([])
 
 def support_vector_machine(df, predictors):
+    # SVC: Use a random_state of 1
     return np.array([])
 
 def ensemble(df, algorithms_with_predictors):
