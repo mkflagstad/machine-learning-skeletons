@@ -6,7 +6,6 @@ from sklearn.cross_validation import KFold
 from sklearn.svm import SVC
 import pandas
 import sklearn
-import main
 import operator
 import numpy as np
 from scipy import stats

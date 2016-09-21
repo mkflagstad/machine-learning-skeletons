@@ -1,6 +1,5 @@
 import pandas
 import sklearn
-import main
 import operator
 import re
 
