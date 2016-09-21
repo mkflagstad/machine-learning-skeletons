@@ -34,14 +34,20 @@ class TitanicWorkshop(unittest.TestCase):
         self.assertTrue(equal)
 
     def test_add_women_in_family(self):
-        your_soln = titanic_tutorial.add_women_in_family(titanic_train)
+        actual = titanic_tutorial.add_women_in_family(titanic_train)
         expected = titanic_tutorial_answers.add_women_in_family(titanic_train)
-        self.assertTrue(is_df_equal(your_soln, expected))
+        self.assertTrue(is_df_equal(actual, expected))
 
     def test_random_forest_ensemble(self):
-        your_soln = titanic_tutorial.random_forest_ensemble(titanic_train)
+        actual = titanic_tutorial.random_forest_ensemble(titanic_train)
         expected = titanic_tutorial_answers.random_forest_ensemble(titanic_train)
-        self.assertTrue(assert_array_equal2(your_soln, expected))
+        self.assertTrue(assert_array_equal2(actual, expected))
+
+    def test_majority_voting(self):
+        predictions = titanic_tutorial_answers.random_forest_ensemble(titanic_train)
+        actual = titanic_tutorial.majority_voting(predictions)
+        expected = titanic_tutorial_answers.majority_voting(predictions)
+        self.assertTrue(assert_array_equal2(actual, expected))
 
     #A support vector machine might work well with this data.
 

@@ -7,6 +7,7 @@ import pandas
 import sklearn
 import main
 import numpy as np
+from scipy import stats
 
 axis_row = 0
 axis_col = 1
@@ -35,6 +36,11 @@ def random_forest_ensemble(df):
     [LogisticRegression(random_state=1), ["Pclass", "Sex", "Fare", "FamilySize", "Title", "Age", "Embarked"]],
     [RandomForestClassifier(random_state=1, n_estimators=50, min_samples_split=4, min_samples_leaf=2),["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize", "Title", "FamilyId"]]]
     return ensemble(copy, algorithms)
+
+def majority_voting(predictions):
+    classify_cell = np.vectorize(lambda cell: 1 if cell >= 0.5 else 0)
+    votes = classify_cell(predictions)
+    return stats.mode(votes)[0][0]
 
 def ensemble(df, algorithms_with_predictors):
     kf = KFold(df.shape[0], n_folds=3, random_state=1)

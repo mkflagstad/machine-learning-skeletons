@@ -8,6 +8,7 @@ import sklearn
 import main
 import operator
 import numpy as np
+from scipy import stats
 
 
 def add_women_in_family(df):
@@ -44,6 +45,9 @@ def random_forest_ensemble(df):
     #The result of the ensemble is a n x m numpy array where n is the number of algorithms we are ensembling
     # and m is the number of data points. Each row is the predictions for a given algorithm.
     return ensemble(copy, algorithms)
+
+def majority_voting(predictions):
+    return np.array([])
 
 def ensemble(df, algorithms_with_predictors):
     kf = KFold(df.shape[0], n_folds=3, random_state=1)
