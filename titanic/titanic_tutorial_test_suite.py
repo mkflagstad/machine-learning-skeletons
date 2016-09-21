@@ -17,21 +17,12 @@ def is_df_equal(df1, df2):
     except:  # appeantly AssertionError doesn't catch all
         return False
 
-def assert_array_equal2(array1, array2):
+def assert_array_equal(array1, array2):
     if array1.shape != array2.shape:
         return False
     return np.allclose(array1, array2)
 
 class TitanicWorkshop(unittest.TestCase):
-
-    def assert_array_equal(self, actual, expected):
-        equal = np.array_equal(expected, actual)
-        if not equal:
-            print("Expected: ")
-            print(expected)
-            print("Actual: ")
-            print(actual)
-        self.assertTrue(equal)
 
     def test_add_women_in_family(self):
         actual = titanic_tutorial.add_women_in_family(titanic_train)
@@ -41,13 +32,13 @@ class TitanicWorkshop(unittest.TestCase):
     def test_random_forest_ensemble(self):
         actual = titanic_tutorial.random_forest_ensemble(titanic_train)
         expected = titanic_tutorial_answers.random_forest_ensemble(titanic_train)
-        self.assertTrue(assert_array_equal2(actual, expected))
+        self.assertTrue(assert_array_equal(actual, expected))
 
     def test_majority_voting(self):
         predictions = titanic_tutorial_answers.random_forest_ensemble(titanic_train)
         actual = titanic_tutorial.majority_voting(predictions)
         expected = titanic_tutorial_answers.majority_voting(predictions)
-        self.assertTrue(assert_array_equal2(actual, expected))
+        self.assertTrue(assert_array_equal(actual, expected))
 
     #A support vector machine might work well with this data.
 
