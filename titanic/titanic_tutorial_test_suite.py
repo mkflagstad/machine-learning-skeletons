@@ -40,7 +40,11 @@ class TitanicWorkshop(unittest.TestCase):
         expected = titanic_tutorial_answers.majority_voting(predictions)
         self.assertTrue(assert_array_equal(actual, expected))
 
-    #A support vector machine might work well with this data.
+    def test_support_vector_machine(self):
+        predictors = ["Pclass", "Sex", "Age", "Fare", "FamilySize"]
+        actual = titanic_tutorial.support_vector_machine(titanic_train, predictors)
+        expected = titanic_tutorial_answers.support_vector_machine(titanic_train, predictors)
+        self.assertTrue(assert_array_equal(actual, expected))
 
     #We could try neural networks.
 

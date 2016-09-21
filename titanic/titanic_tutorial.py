@@ -49,6 +49,9 @@ def random_forest_ensemble(df):
 def majority_voting(predictions):
     return np.array([])
 
+def support_vector_machine(df, predictors):
+    return np.array([])
+
 def ensemble(df, algorithms_with_predictors):
     kf = KFold(df.shape[0], n_folds=3, random_state=1)
 

@@ -3,6 +3,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.cross_validation import KFold
+from sklearn.svm import SVC
 import pandas
 import sklearn
 import main
@@ -13,6 +14,9 @@ axis_row = 0
 axis_col = 1
 
 num_women_by_family = {}
+
+def classifier(survival_percent):
+    return 1 if survival_percent >= 0.5 else 0
 
 def look_up_num_women(row):
     return num_women_by_family[row['FamilyId']]
@@ -37,20 +41,15 @@ def random_forest_ensemble(df):
     [RandomForestClassifier(random_state=1, n_estimators=50, min_samples_split=4, min_samples_leaf=2),["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize", "Title", "FamilyId"]]]
     return ensemble(copy, algorithms)
 
-def majority_voting(predictions):
-    classify_cell = np.vectorize(lambda cell: 1 if cell >= 0.5 else 0)
-    votes = classify_cell(predictions)
-    return stats.mode(votes)[0][0]
-
 def ensemble(df, algorithms_with_predictors):
     kf = KFold(df.shape[0], n_folds=3, random_state=1)
 
-    # algorithms x data_points (2 x 891)
+    # algorithms x data_points
     predictions = np.asarray([np.asarray([]) for i in range(len(algorithms_with_predictors))])
     for train, test in kf:
         train_target = df["Survived"].iloc[train]
 
-        # algorithms x data_points_per_fold (2 x 297)
+        # algorithms x data_points_per_fold
         full_test_predictions = []
 
         # Make predictions for each algorithm on each fold
@@ -64,3 +63,21 @@ def ensemble(df, algorithms_with_predictors):
         full_test_predictions = np.asarray(full_test_predictions)
         predictions = np.concatenate((predictions, full_test_predictions), axis=1)
     return predictions
+
+def majority_voting(predictions):
+    classify_cell = np.vectorize(classifier)
+    votes = classify_cell(predictions)
+    return stats.mode(votes)[0][0]
+
+def support_vector_machine(df, predictors):
+    kf = KFold(df.shape[0], n_folds=3, random_state=1)
+    predictions = []
+    for train, test in kf:
+        alg = SVC(probability=True)
+        train_target = df["Survived"].iloc[train]
+        alg.fit(df[predictors].iloc[train,:], train_target)
+        test_predictions = alg.predict_proba(df[predictors].iloc[test,:].astype(float))[:,1]
+        predictions.append(test_predictions)
+    predictions = np.concatenate(predictions, axis=0)
+    return predictions
+
