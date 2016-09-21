@@ -46,11 +46,5 @@ class TitanicWorkshop(unittest.TestCase):
         expected = titanic_tutorial_answers.support_vector_machine(titanic_train, predictors)
         self.assertTrue(assert_array_equal(actual, expected))
 
-    #We could try neural networks.
-
-    #Boosting with a different base classifier might work better.
-
-    #Could majority voting be a better ensembling method than averaging probabilities?
-
 if __name__ == '__main__':
     unittest.main()

@@ -32,8 +32,7 @@ def add_women_in_family(df):
     return copy
 
 def random_forest_ensemble(df):
-    #Create a copy of the data frame to avoid side effects:
-    copy = df.copy(deep=True)
+    #Goal: get the predictions for likelihood of survival using GradientBoostingClassifier, LogisticRegression, and RandomForest
 
     #Add the random forest model to algorithms we want to ensemble
     #   - Use the same predictors as the GradientBoostingClassifier
@@ -43,14 +42,23 @@ def random_forest_ensemble(df):
     [GradientBoostingClassifier(random_state=1, n_estimators=25, max_depth=3), ["Pclass", "Sex", "Age", "Fare", "Embarked", "FamilySize", "Title", "FamilyId"]],
     [LogisticRegression(random_state=1), ["Pclass", "Sex", "Fare", "FamilySize", "Title", "Age", "Embarked"]]]
     #The result of the ensemble is a n x m numpy array where n is the number of algorithms we are ensembling
-    # and m is the number of data points. Each row is the predictions for a given algorithm.
-    return ensemble(copy, algorithms)
+    # and m is the number of data points. Each row is the predictions for a given algorithm. Check out the code below!
+    return ensemble(df, algorithms)
 
 def majority_voting(predictions):
+    #Goal: given an n x m numpy array (where n is the number of algorithms we are ensembling and m is the number of data points),
+    # where each row is the predictions for one algorithm and each column is the three predictions for a single data point,
+    # classify each datapoint as survived (1) or did not survive (0) using majority voting.
+    # This is an alternative to ensembling the algortihms by averaging the predictions.
+    #Your result should be a 1 x m array where m is the number of data points.
     return np.array([])
 
 def support_vector_machine(df, predictors):
-    # SVC: Use a random_state of 1
+    #Goal: Use a support vector machine to find likelihood of surival. We are going to use Support Vector Classification(SVC)
+    # We are again going to use Kfold for cross validation.
+    kf = KFold(df.shape[0], n_folds=3, random_state=1)
+    for train, test in kf:
+        alg = SVC(probability=True, random_state=1)
     return np.array([])
 
 def ensemble(df, algorithms_with_predictors):
@@ -75,3 +83,6 @@ def ensemble(df, algorithms_with_predictors):
         full_test_predictions = np.asarray(full_test_predictions)
         predictions = np.concatenate((predictions, full_test_predictions), axis=1)
     return predictions
+
+def get_accuracy(df, predictions):
+    return sum(predictions[predictions == df["Survived"]]) / len(predictions)
