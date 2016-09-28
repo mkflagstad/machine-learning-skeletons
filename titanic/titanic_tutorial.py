@@ -11,26 +11,33 @@ import numpy as np
 from scipy import stats
 
 
+# Generate a new feature: WomenInFamily
+
 def add_women_in_family(df):
     #Goal: Return the dataframe with a new column "WomenInFamily" representing the number of women in the family.
 
     #Create a copy of the data frame to avoid side effects:
     copy = df.copy(deep=True)
 
-    #Use the columns "Sex" and "FamilyId". Remember that women are represented by a 1
-    #in the sex column. For the -1 family id, make the num women 0.
+    #You will need a dictionary of family ids to number of women in that family. Initialize the dictionary
+    #with a key for each unique family id and a value of zero.
+    num_women_by_family = {}
+    for fam in copy["FamilyId"].unique():
+        num_women_by_family[fam] = 0
 
-    #You can iterate over the index and rows in a dataframe using:
-    # for index, row in df.iterrows
+    #To populate the dictionary, you will need to use the columns "Sex" and "FamilyId".
+    #Remember that women are represented by a 1 in the sex column. For the -1 family id, make the num women 0.
+    #You can iterate over the index and rows in a dataframe using: for index, row in df.iterrows
 
     #Create a new column by apply a function to our dataframe:
-    #num_women_col = df.apply(lambda row: my_cool_function(row))
+    #num_women_col = df.apply(lambda row: count_women(row))
 
     #Add the column to the dataframe:
     #df["WomenInFamily"] = num_women_col
 
     return copy
 
+# Combine results from different classification algorithms: Random Forest Ensemble
 def random_forest_ensemble(df):
     #Goal: get the predictions for likelihood of survival using GradientBoostingClassifier, LogisticRegression, and RandomForest
 
@@ -45,6 +52,10 @@ def random_forest_ensemble(df):
     # and m is the number of data points. Each row is the predictions for a given algorithm. Check out the code below!
     return ensemble(df, algorithms)
 
+# We need to combine the predictions in the ensemble.
+#   In part 2 of the titanic tutorial, we combined using averages.
+#   Now that we have more than two algorithms, we can combine by choosing the majority prediction. i.e., if two algorithms predict 1 and the other 0,
+#   the final prediction will be 1.
 def majority_voting(predictions):
     #Goal: given an n x m numpy array (where n is the number of algorithms we are ensembling and m is the number of data points),
     # where each row is the predictions for one algorithm and each column is the three predictions for a single data point,
@@ -53,6 +64,8 @@ def majority_voting(predictions):
     #Your result should be a 1 x m array where m is the number of data points.
     return np.array([])
 
+# That other stuff above is one way. Here's another way.
+# See what SVMs are all about here: http://docs.opencv.org/2.4/doc/tutorials/ml/introduction_to_svm/introduction_to_svm.html
 def support_vector_machine(df, predictors):
     #Goal: Use a support vector machine to find likelihood of surival. We are going to use Support Vector Classification(SVC)
     # We are again going to use Kfold for cross validation.
